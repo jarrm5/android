@@ -2,12 +2,17 @@ package com.example.jarrm5.gymapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by James on 3/3/2017.
+ * Talk to the database with this class
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -80,18 +85,76 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /*public boolean insertWorkout(String name){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(WORKOUT_NAME,name);
-        long result = db.insert(TABLE_WORKOUT,null,contentValues);
-        return result == -1 ? false:true;
-    }*/
-
     public long createWorkout(Workout workout){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(WORKOUT_NAME,workout.getWktName());
         return db.insert(TABLE_WORKOUT,null,contentValues);
+    }
+
+    public Cursor getAllWorkouts(){
+    //public List<Workout> getWorkouts(){
+        //List<Workout> workouts = new ArrayList<Workout>();
+        //String selectQuery = "SELECT * FROM " + TABLE_WORKOUT;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT, null);
+        Cursor c = db.query(TABLE_WORKOUT, new String[] {PKEY_WORKOUT_ID,WORKOUT_NAME},null,null,null,null,null);
+
+        //if (c.moveToFirst()) {
+        //    do {
+        //       Workout workout = new Workout(
+        //                c.getInt(c.getColumnIndex(PKEY_WORKOUT_ID)),
+        //                c.getString(c.getColumnIndex(WORKOUT_NAME))
+        //        );
+        //        workouts.add(workout);
+        //    } while (c.moveToNext());
+        //}
+
+        if (c != null){
+            c.moveToFirst();
+        }
+        //return workouts;
+        return c;
+    }
+
+    public static String getPkeyWorkoutId() {
+        return PKEY_WORKOUT_ID;
+    }
+
+    public static String getWorkoutName() {
+        return WORKOUT_NAME;
+    }
+
+    public static String getPkeyExerciseId() {
+        return PKEY_EXERCISE_ID;
+    }
+
+    public static String getExerciseName() {
+        return EXERCISE_NAME;
+    }
+
+    public static String getFkeyWorkoutId() {
+        return FKEY_WORKOUT_ID;
+    }
+
+    public static String getPkeySetId() {
+        return PKEY_SET_ID;
+    }
+
+    public static String getSetWeight() {
+        return SET_WEIGHT;
+    }
+
+    public static String getSetReps() {
+        return SET_REPS;
+    }
+
+    public static String getSetDate() {
+        return SET_DATE;
+    }
+
+    public static String getFkeyExerciseId() {
+        return FKEY_EXERCISE_ID;
     }
 }
