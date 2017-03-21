@@ -92,14 +92,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_WORKOUT,null,contentValues);
     }
 
-    public Cursor getAllWorkouts(){
+    public Cursor getWorkouts(){
     //public List<Workout> getWorkouts(){
         //List<Workout> workouts = new ArrayList<Workout>();
         //String selectQuery = "SELECT * FROM " + TABLE_WORKOUT;
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        //Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT, null);
-        Cursor c = db.query(TABLE_WORKOUT, new String[] {PKEY_WORKOUT_ID,WORKOUT_NAME},null,null,null,null,null);
+        //SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT, null);
+        //Cursor c = db.query(TABLE_WORKOUT, new String[] {PKEY_WORKOUT_ID,WORKOUT_NAME},null,null,null,null,null);
 
         //if (c.moveToFirst()) {
         //    do {
@@ -111,9 +112,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //    } while (c.moveToNext());
         //}
 
-        if (c != null){
-            c.moveToFirst();
-        }
+        //if (c != null){
+        //    c.moveToFirst();
+        //}
         //return workouts;
         return c;
     }

@@ -8,20 +8,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+
+import java.util.ArrayList;
+//import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper myDb;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myDb = new DatabaseHelper(this);
-        populateListView();
+        mListView = (ListView)findViewById(R.id.listViewWorkouts);
+        populateWorkouts();
     }
 
     @Override
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Workout workout = new Workout(input.getText().toString());
                         long workout_key = myDb.createWorkout(workout);
-                        populateListView();
+                        populateWorkouts();
                     }
                 });
                 builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -70,12 +76,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void populateListView(){
-        Cursor cursor = myDb.getAllWorkouts();
-        String[] fromFieldNames = new String[] {myDb.getPkeyWorkoutId(),myDb.getWorkoutName()};
-        int[] toViewIDs = new int[] {R.id.textViewWorkoutNumber, R.id.textViewWorkout};
-        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getBaseContext(),R.layout.workout_layout, cursor, fromFieldNames, toViewIDs,0);
-        ListView myList = (ListView) findViewById(R.id.listViewWorkouts);
-        myList.setAdapter(cursorAdapter);
+    private void populateWorkouts(){
+        Cursor cursor = myDb.getWorkouts();
+        //ArrayList<Workout> workouts = new ArrayList<>();
+        ArrayList<String> workoutNames = new ArrayList<>();
+        while(cursor.moveToNext()) {
+            //get the value from the database in column 1
+            //then add it to the ArrayList
+            //workouts.add(new Workout(cursor.getInt(cursor.getColumnIndex(myDb.getPkeyWorkoutId())),cursor.getString(cursor.getColumnIndex(myDb.getWorkoutName()))));
+            workoutNames.add(cursor.getString(1));
+        }
+        //String[] fromFieldNames = new String[] {myDb.getPkeyWorkoutId(),myDb.getWorkoutName()};
+        //int[] toViewIDs = new int[] {R.id.textViewWorkoutNumber, R.id.textViewWorkout};
+        //SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getBaseContext(),R.layout.workout_layout, cursor, fromFieldNames, toViewIDs,0);
+        //ListView myList = (ListView) findViewById(R.id.listViewWorkouts);
+        //myList.setAdapter(cursorAdapter);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,workoutNames);
+        mListView.setAdapter(adapter);
+
+
     }
 }

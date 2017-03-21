@@ -19,7 +19,16 @@ public class Workout {
         this.wktName = wktName;
     }
 
+    public int getWktId() {
+        return wktId;
+    }
+
+    public void setWktId(int wktId) {
+        this.wktId = wktId;
+    }
+
     public String getWktName() {
+
         return wktName;
     }
 
