@@ -1,6 +1,7 @@
 package com.example.jarrm5.gymapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -8,26 +9,40 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-
 import java.util.ArrayList;
-//import android.widget.SimpleCursorAdapter;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseHelper myDb;
-    private ListView mListView;
+    public static DatabaseHelper myDb; //Make static so every activity can see the db helper
+    private ListView mListViewWorkouts;
+    private List workouts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myDb = new DatabaseHelper(this);
-        mListView = (ListView)findViewById(R.id.listViewWorkouts);
+        mListViewWorkouts = (ListView)findViewById(R.id.listViewWorkouts);
         populateWorkouts();
+
+        //myDb.createExercise(new Exercise("Military Press",2));
+        //myDb.createExercise(new Exercise("Dumbbell Raises",2));
+
+        mListViewWorkouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Workout w = (Workout)workouts.get(position);
+                Intent intent = new Intent(MainActivity.this,ExcActivity.class);
+                intent.putExtra("key",w.getWktId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -78,22 +93,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateWorkouts(){
         Cursor cursor = myDb.getWorkouts();
-        //ArrayList<Workout> workouts = new ArrayList<>();
-        ArrayList<String> workoutNames = new ArrayList<>();
+        workouts = new ArrayList();
         while(cursor.moveToNext()) {
-            //get the value from the database in column 1
-            //then add it to the ArrayList
-            //workouts.add(new Workout(cursor.getInt(cursor.getColumnIndex(myDb.getPkeyWorkoutId())),cursor.getString(cursor.getColumnIndex(myDb.getWorkoutName()))));
-            workoutNames.add(cursor.getString(1));
+            //Create workout objects from each record in the database, save to the array
+            workouts.add(new Workout(cursor.getInt(cursor.getColumnIndex(myDb.getPkeyWorkoutId())),cursor.getString(cursor.getColumnIndex(myDb.getWorkoutName()))));
         }
-        //String[] fromFieldNames = new String[] {myDb.getPkeyWorkoutId(),myDb.getWorkoutName()};
-        //int[] toViewIDs = new int[] {R.id.textViewWorkoutNumber, R.id.textViewWorkout};
-        //SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getBaseContext(),R.layout.workout_layout, cursor, fromFieldNames, toViewIDs,0);
-        //ListView myList = (ListView) findViewById(R.id.listViewWorkouts);
-        //myList.setAdapter(cursorAdapter);
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,workoutNames);
-        mListView.setAdapter(adapter);
-
-
+        cursor.close();
+        //Load the data array to the listview.
+        //Workout objects are passed to each LV item; we can see the names from the Workout's toString method
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,workouts);
+        mListViewWorkouts.setAdapter(adapter);
     }
 }

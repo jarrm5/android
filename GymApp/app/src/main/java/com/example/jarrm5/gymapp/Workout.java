@@ -35,4 +35,9 @@ public class Workout {
     public void setWktName(String wktName) {
         this.wktName = wktName;
     }
+
+    @Override
+    public String toString() {
+        return getWktName();
+    }
 }

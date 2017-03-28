@@ -11,6 +11,11 @@ public class Exercise {
 
     public Exercise() {}
 
+    public Exercise(String exerName, int wktId) {
+        this.exerName = exerName;
+        this.wktId = wktId;
+    }
+
     public Exercise(int exerId, String exerName, int wktId) {
         this.exerId = exerId;
         this.exerName = exerName;
@@ -39,5 +44,10 @@ public class Exercise {
 
     public void setWktId(int wktId) {
         this.wktId = wktId;
+    }
+
+    @Override
+    public String toString() {
+        return getExerName();
     }
 }

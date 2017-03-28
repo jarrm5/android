@@ -3,5 +3,6 @@
 
     <!-- action bar menu on the main activity -->
     <string name="add_workout">Add a Workout</string>
+    <string name="title_activity_exc">ExcActivity</string>
 
 </resources>

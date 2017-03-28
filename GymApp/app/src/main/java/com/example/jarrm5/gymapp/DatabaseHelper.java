@@ -85,6 +85,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public long createExercise(Exercise exercise){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EXERCISE_NAME,exercise.getExerName());
+        contentValues.put(FKEY_WORKOUT_ID,exercise.getWktId());
+        return db.insert(TABLE_EXERCISE,null,contentValues);
+    }
+
     public long createWorkout(Workout workout){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -93,29 +101,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getWorkouts(){
-    //public List<Workout> getWorkouts(){
-        //List<Workout> workouts = new ArrayList<Workout>();
-        //String selectQuery = "SELECT * FROM " + TABLE_WORKOUT;
-
         //SQLiteDatabase db = this.getReadableDatabase();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT, null);
-        //Cursor c = db.query(TABLE_WORKOUT, new String[] {PKEY_WORKOUT_ID,WORKOUT_NAME},null,null,null,null,null);
+        return c;
+    }
 
-        //if (c.moveToFirst()) {
-        //    do {
-        //       Workout workout = new Workout(
-        //                c.getInt(c.getColumnIndex(PKEY_WORKOUT_ID)),
-        //                c.getString(c.getColumnIndex(WORKOUT_NAME))
-        //        );
-        //        workouts.add(workout);
-        //    } while (c.moveToNext());
-        //}
-
-        //if (c != null){
-        //    c.moveToFirst();
-        //}
-        //return workouts;
+    public Cursor getExercises(int key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_EXERCISE + " WHERE " + FKEY_WORKOUT_ID + "= '" + key + "';";
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_EXERCISE + " WHERE " + FKEY_WORKOUT_ID + "= '" + key + "';", null);
         return c;
     }
 
