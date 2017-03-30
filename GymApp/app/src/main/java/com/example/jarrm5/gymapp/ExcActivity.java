@@ -33,7 +33,11 @@ public class ExcActivity extends AppCompatActivity {
             //Retrieve the workout key from the workout clicked from the previous activity
             theKey = extras.getInt("key");
         }
-        populateExercises(theKey);
+        //Display the listview with exercises
+        if(!populateExercises(theKey)){
+            //Nothing to display, show empty message
+            mListViewExercises.setEmptyView(findViewById(R.id.noExc));
+        }
     }
 
     @Override
@@ -65,16 +69,24 @@ public class ExcActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();}
-            });
+                dialog.cancel();
+            }
+        });
 
         builder.show();
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void populateExercises(int key){
+    private boolean populateExercises(int key){
+        //Retrieve data from the helper
         Cursor cursor = myDb.getExercises(key);
+
+        //No data is returned; return false
+        if(cursor.getCount() == 0){
+            return false;
+        }
+
         exercises = new ArrayList();
         while(cursor.moveToNext()) {
             //Create exercise objects from each record in the database specified by key, save to the array
@@ -85,5 +97,8 @@ public class ExcActivity extends AppCompatActivity {
         //Exercise objects are passed to each LV item; we can see the names from the exercise's toString method
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,exercises);
         mListViewExercises.setAdapter(adapter);
+
+        //Succesfully obtained data; return true
+        return true;
     }
 }

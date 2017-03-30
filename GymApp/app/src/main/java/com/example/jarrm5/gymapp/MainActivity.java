@@ -54,38 +54,31 @@ public class MainActivity extends AppCompatActivity {
     //Clicking add workout button in the action bar
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
-            case R.id.action_add_workout:
+        //Creating the dialog box for entering the workout name
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                //Creating the dialog box for entering the workout name
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
 
-                final EditText input = new EditText(this);
+        builder.setTitle("Enter the workout name").setView(input).setView(input);
 
-                builder.setTitle("Enter the workout name").setView(input).setView(input);
+        builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Workout workout = new Workout(input.getText().toString());
+                long workout_key = myDb.createWorkout(workout);
+                populateWorkouts();
+            }
+        });
+        builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
-                builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Workout workout = new Workout(input.getText().toString());
-                        long workout_key = myDb.createWorkout(workout);
-                        populateWorkouts();
-                    }
-                });
-                builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+        builder.show();
 
-                builder.show();
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
     //Show the user all of the workouts
     private void populateWorkouts(){

@@ -16,4 +16,12 @@
         android:id="@+id/listViewExercises"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/noExc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/empty_exc" >
+    </TextView>
 </RelativeLayout>
