@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static DatabaseHelper myDb; //Make static so every activity can see the db helper
+    public static DatabaseHelper myDb; //Make public so every activity can see the db helper; make static so the object is created only one time
     private ListView mListViewWorkouts;
     private List workouts;
 
@@ -32,14 +32,12 @@ public class MainActivity extends AppCompatActivity {
         mListViewWorkouts = (ListView)findViewById(R.id.listViewWorkouts);
         populateWorkouts();
 
-        //myDb.createExercise(new Exercise("Military Press",2));
-        //myDb.createExercise(new Exercise("Dumbbell Raises",2));
-
+        //Event for clicking a workout in the listview
         mListViewWorkouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Workout w = (Workout)workouts.get(position);
                 Intent intent = new Intent(MainActivity.this,ExcActivity.class);
-                intent.putExtra("key",w.getWktId());
+                intent.putExtra("key",w.getWktId());      //Pass the key of the workout that was clicked to the next activity
                 startActivity(intent);
             }
         });
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu,menu);
-        //return super.onCreateOptionsMenu(menu);
         return true;
     }
 
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    //Show the user all of the workouts
     private void populateWorkouts(){
         Cursor cursor = myDb.getWorkouts();
         workouts = new ArrayList();

@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    //private static final String LOG = "DatabaseHelper";  //Logcat tag
     private static final int DATABASE_VERSION = 1;  // Database Version
     private static final String DATABASE_NAME = "workout"; // Database Name
 
@@ -101,7 +100,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getWorkouts(){
-        //SQLiteDatabase db = this.getReadableDatabase();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT, null);
         return c;
@@ -109,7 +107,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getExercises(int key){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_EXERCISE + " WHERE " + FKEY_WORKOUT_ID + "= '" + key + "';";
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_EXERCISE + " WHERE " + FKEY_WORKOUT_ID + "= '" + key + "';", null);
         return c;
     }
