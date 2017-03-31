@@ -98,6 +98,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(WORKOUT_NAME,workout.getWktName());
         return db.insert(TABLE_WORKOUT,null,contentValues);
     }
+    public Cursor getWorkoutByKey(int key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT + " WHERE " + PKEY_WORKOUT_ID +  " = '" + key + "';", null);
+        return c;
+    }
 
     public Cursor getWorkouts(){
         SQLiteDatabase db = this.getWritableDatabase();

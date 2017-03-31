@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 import static com.example.jarrm5.gymapp.MainActivity.myDb;
@@ -20,6 +21,8 @@ public class ExcActivity extends AppCompatActivity {
     private int theKey;    //Stores the key of workout that was clicked to get to this activity
     private List exercises;
     private ListView mListViewExercises;
+    private TextView mEmptyExc;
+    private String mThisWorkout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +30,23 @@ public class ExcActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exc);
 
         mListViewExercises = (ListView)findViewById(R.id.listViewExercises);
+        mEmptyExc = (TextView)findViewById(R.id.noExc);
+
         //Recover the workout key from the previous activity
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             //Retrieve the workout key from the workout clicked from the previous activity
             theKey = extras.getInt("key");
         }
+
+        //Workout key recovered, now get the workout name associated with the key
+        mThisWorkout = getWorkoutName(theKey).getWktName();
+        this.setTitle(mThisWorkout);
+
         //Display the listview with exercises
         if(!populateExercises(theKey)){
             //Nothing to display, show empty message
+            mEmptyExc.setText(getResources().getString(R.string.empty_exc) + " " + mThisWorkout + "!");
             mListViewExercises.setEmptyView(findViewById(R.id.noExc));
         }
     }
@@ -78,6 +89,17 @@ public class ExcActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Get the workout name associated with the key passed to this activity
+    //Used for displaying the workout name when there are no exercises associated with it
+    private Workout getWorkoutName(int key){
+        Cursor cursor = myDb.getWorkoutByKey(key);
+        cursor.moveToFirst();
+        Workout w = new Workout(cursor.getInt(cursor.getColumnIndex(myDb.getPkeyWorkoutId())),cursor.getString(cursor.getColumnIndex(myDb.getWorkoutName())));
+        cursor.close();
+        return w;
+    }
+
+    //Get all exercise names associated with the key passed to this activity
     private boolean populateExercises(int key){
         //Retrieve data from the helper
         Cursor cursor = myDb.getExercises(key);
