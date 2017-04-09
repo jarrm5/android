@@ -83,7 +83,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_SET);
         onCreate(db);
     }
-
+    public long createWorkout(Workout workout){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WORKOUT_NAME,workout.getWktName());
+        return db.insert(TABLE_WORKOUT,null,contentValues);
+    }
     public long createExercise(Exercise exercise){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -91,16 +96,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(FKEY_WORKOUT_ID,exercise.getWktId());
         return db.insert(TABLE_EXERCISE,null,contentValues);
     }
-
-    public long createWorkout(Workout workout){
+    public long createSet(Set set){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(WORKOUT_NAME,workout.getWktName());
-        return db.insert(TABLE_WORKOUT,null,contentValues);
+        contentValues.put(SET_REPS,set.getReps());
+        contentValues.put(SET_WEIGHT,set.getWeight());
+        contentValues.put(SET_DATE,set.getProgDate());
+        contentValues.put(FKEY_EXERCISE_ID,set.getExerId());
+        return db.insert(TABLE_SET,null,contentValues);
     }
     public Cursor getWorkoutByKey(int key){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT + " WHERE " + PKEY_WORKOUT_ID +  " = '" + key + "';", null);
+        return c;
+    }
+    public Cursor getExerciseByKey(int key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_EXERCISE + " WHERE " + PKEY_EXERCISE_ID +  " = '" + key + "';", null);
         return c;
     }
 
@@ -115,6 +127,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_EXERCISE + " WHERE " + FKEY_WORKOUT_ID + "= '" + key + "';", null);
         return c;
     }
+    public Cursor getSets(int key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SET + " WHERE " + FKEY_EXERCISE_ID + "= '" + key + "';", null);
+        return c;
+    }
+
 
     public static String getPkeyWorkoutId() {
         return PKEY_WORKOUT_ID;

@@ -10,12 +10,19 @@ public class Set {
     private int setId;
     private int weight;
     private int reps;
-    private Date progDate; //Idk if this is the right datatype, sql may not take it
+    private String progDate; //Idk if 'Date' is the right datatype, sql may not take it
     private int exerId;
 
     public Set(){}
 
-    public Set(int setId, int weight, int reps, Date progDate, int exerId) {
+    public Set(int weight, int reps, String progDate, int exerId) {
+        this.weight = weight;
+        this.reps = reps;
+        this.progDate = progDate;
+        this.exerId = exerId;
+    }
+
+    public Set(int setId, int weight, int reps, String progDate, int exerId) {
         this.setId = setId;
         this.weight = weight;
         this.reps = reps;
@@ -47,11 +54,11 @@ public class Set {
         this.reps = reps;
     }
 
-    public Date getProgDate() {
+    public String getProgDate() {
         return progDate;
     }
 
-    public void setProgDate(Date progDate) {
+    public void setProgDate(String progDate) {
         this.progDate = progDate;
     }
 
@@ -61,5 +68,10 @@ public class Set {
 
     public void setExerId(int exerId) {
         this.exerId = exerId;
+    }
+
+    @Override
+    public String toString() {
+        return getReps() + "reps/n" + getWeight() + "lbs/n" + getProgDate();
     }
 }

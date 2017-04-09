@@ -16,6 +16,12 @@ public class Exercise {
         this.wktId = wktId;
     }
 
+    public Exercise(int exerId, String exerName) {
+        this.exerId = exerId;
+        this.exerName = exerName;
+    }
+
+
     public Exercise(int exerId, String exerName, int wktId) {
         this.exerId = exerId;
         this.exerName = exerName;

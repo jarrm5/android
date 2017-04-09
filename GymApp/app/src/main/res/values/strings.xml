@@ -3,6 +3,6 @@
     <string name="add_workout">Add a Workout</string>
     <string name="title_activity_exc">ExcActivity</string>
     <string name="title_activity_exc_">Exc_Activity</string>
-    <string name="empty_exc">Click + to add some exercises</string>
+    <string name="title_activity_set">SetActivity</string>
 
 </resources>

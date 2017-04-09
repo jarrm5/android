@@ -1,6 +1,7 @@
 package com.example.jarrm5.gymapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -8,21 +9,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
-import static com.example.jarrm5.gymapp.MainActivity.myDb;
+import static com.example.jarrm5.gymapp.MainActivity.myDb; //import the app's database
 
 public class ExcActivity extends AppCompatActivity {
 
-    private int theKey;    //Stores the key of workout that was clicked to get to this activity
-    private List exercises;
-    private ListView mListViewExercises;
-    private TextView mEmptyExc;
-    private String mThisWorkout;
+    private int theKey;                  //Stores the key of workout that was clicked to get to this activity
+    private List exercises;              //holds Exercise objects used for populating listview
+    private ListView mListViewExercises; //container to hold the exercises
+    private TextView mEmptyExc;          //default message when there are no exercises to display
+    private String mThisWorkout;         //save the name of the workout associated with these exercises
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +44,25 @@ public class ExcActivity extends AppCompatActivity {
 
         //Workout key recovered, now get the workout name associated with the key
         mThisWorkout = getWorkoutName(theKey).getWktName();
-        this.setTitle(mThisWorkout);
+        this.setTitle(mThisWorkout + " Exercises");
 
         //Display the listview with exercises
         if(!populateExercises(theKey)){
             //Nothing to display, show empty message
-            mEmptyExc.setText(getResources().getString(R.string.empty_exc) + " " + mThisWorkout + "!");
+            mEmptyExc.setText("Click + to add some " + mThisWorkout + " exercises!");
             mListViewExercises.setEmptyView(findViewById(R.id.noExc));
         }
+
+        //Event for clicking a workout in the listview
+        mListViewExercises.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Exercise e = (Exercise)exercises.get(position);
+                Intent intent = new Intent(ExcActivity.this,SetActivity.class);
+                intent.putExtra("key",e.getExerId());      //Pass the key of the exercise that was clicked to the next activity
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -67,8 +81,7 @@ public class ExcActivity extends AppCompatActivity {
 
         final EditText input = new EditText(this);
 
-        builder.setTitle("Enter the exercise name").setView(input).setView(input);
-
+        builder.setTitle("Enter an exercise for " + mThisWorkout + " workout").setView(input);
         builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

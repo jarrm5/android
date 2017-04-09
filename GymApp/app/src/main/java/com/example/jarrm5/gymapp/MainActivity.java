@@ -20,9 +20,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static DatabaseHelper myDb; //Make public so every activity can see the db helper; make static so the object is created only one time
     private ListView mListViewWorkouts;
     private List workouts;
+    //Make public so every activity can see the db helper
+    //Make static so the object is created only one time
+    public static DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
