@@ -72,6 +72,6 @@ public class Set {
 
     @Override
     public String toString() {
-        return getReps() + "reps/n" + getWeight() + "lbs/n" + getProgDate();
+        return getWeight() + " lbs\r\n" + getReps() + " reps\r\n" + getProgDate();
     }
 }

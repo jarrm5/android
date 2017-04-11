@@ -4,5 +4,7 @@
     <string name="title_activity_exc">ExcActivity</string>
     <string name="title_activity_exc_">Exc_Activity</string>
     <string name="title_activity_set">SetActivity</string>
+    <string name="dialog__set_weight">Weight:</string>
+    <string name="dialog_set_reps">Reps:</string>
 
 </resources>

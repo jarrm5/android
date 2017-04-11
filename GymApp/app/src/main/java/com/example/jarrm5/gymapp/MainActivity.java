@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     //Make public so every activity can see the db helper
     //Make static so the object is created only one time
     public static DatabaseHelper myDb;
+    private TextView mEmptyWkt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         myDb = new DatabaseHelper(this);
         mListViewWorkouts = (ListView)findViewById(R.id.listViewWorkouts);
-        populateWorkouts();
+        mEmptyWkt = (TextView)findViewById(R.id.noWkt);
+
+        //Display the listview with workouts
+        if(!populateWorkouts()){
+            //Nothing to display, show empty message
+            mEmptyWkt.setText("Click + to add some workouts!");
+            mListViewWorkouts.setEmptyView(findViewById(R.id.noWkt));
+        }
 
         //Event for clicking a workout in the listview
         mListViewWorkouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,9 +93,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     //Show the user all of the workouts
-    private void populateWorkouts(){
+    private boolean populateWorkouts(){
         Cursor cursor = myDb.getWorkouts();
+
+        if(cursor.getCount() == 0){
+            return false;
+        }
+
         workouts = new ArrayList();
+
         while(cursor.moveToNext()) {
             //Create workout objects from each record in the database, save to the array
             workouts.add(new Workout(cursor.getInt(cursor.getColumnIndex(myDb.getPkeyWorkoutId())),cursor.getString(cursor.getColumnIndex(myDb.getWorkoutName()))));
@@ -95,5 +111,7 @@ public class MainActivity extends AppCompatActivity {
         //Workout objects are passed to each LV item; we can see the names from the Workout's toString method
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,workouts);
         mListViewWorkouts.setAdapter(adapter);
+
+        return true;
     }
 }
