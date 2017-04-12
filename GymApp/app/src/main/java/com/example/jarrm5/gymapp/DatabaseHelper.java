@@ -105,6 +105,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(FKEY_EXERCISE_ID,set.getExerId());
         return db.insert(TABLE_SET,null,contentValues);
     }
+    public int updateSet(Set set){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PKEY_SET_ID,set.getSetId());
+        contentValues.put(SET_REPS,set.getReps());
+        contentValues.put(SET_WEIGHT,set.getWeight());
+        contentValues.put(SET_DATE,set.getProgDate());
+        contentValues.put(FKEY_EXERCISE_ID,set.getExerId());
+        return db.update(TABLE_SET,contentValues,"setId = " + set.getSetId(),null);
+    }
     public Cursor getWorkoutByKey(int key){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_WORKOUT + " WHERE " + PKEY_WORKOUT_ID +  " = '" + key + "';", null);
@@ -132,7 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SET + " WHERE " + FKEY_EXERCISE_ID + "= '" + key + "';", null);
         return c;
     }
-
 
     public static String getPkeyWorkoutId() {
         return PKEY_WORKOUT_ID;

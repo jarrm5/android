@@ -1,7 +1,5 @@
 package com.example.jarrm5.gymapp;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +36,7 @@ public class SetActivity extends AppCompatActivity implements SetDialog.MyDialog
 
         mListViewSets = (ListView)findViewById(R.id.listViewSets);
         mEmptySet = (TextView)findViewById(R.id.noSet);
+
         mSetDialog = new SetDialog();
 
         Bundle extras = getIntent().getExtras();
@@ -64,7 +63,8 @@ public class SetActivity extends AppCompatActivity implements SetDialog.MyDialog
                 //Persist the weight and reps in the number pickers for updating sets
                 mSetDialog.setDefaultWeight(s.getWeight());
                 mSetDialog.setDefaultReps(s.getReps());
-                mSetDialog.setMode("Edit");
+                mSetDialog.setMode("update");
+                mSetDialog.setThisKey(s.getSetId());
                 //show the dialog for updating
                 mSetDialog.show(getFragmentManager(),"setdialog");
             }
@@ -84,14 +84,21 @@ public class SetActivity extends AppCompatActivity implements SetDialog.MyDialog
         //Set the number pickers to 0 when creating new sets
         mSetDialog.setDefaultWeight(0);
         mSetDialog.setDefaultReps(0);
-        mSetDialog.setMode("Create");
+        mSetDialog.setMode("create");
         mSetDialog.show(getFragmentManager(),"setdialog");
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void onReturnValue(int weight, int reps){
-        Set set = new Set(weight,reps,getDateTime(),theKey);
-        long set_key = myDb.createSet(set);
+    public void onReturnValue(int weight, int reps, String mode,int PKey){
+        Set set;
+        if(mode.equals("create")){
+            set = new Set(weight,reps,getDateTime(),theKey);
+            myDb.createSet(set);
+        }
+        else if(mode.equals("update")){
+            set = new Set(PKey,weight,reps,getDateTime(),theKey);
+            myDb.updateSet(set);
+        }
         populateSets(theKey);
     }
 

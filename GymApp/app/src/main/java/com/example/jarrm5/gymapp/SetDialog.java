@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class SetDialog extends DialogFragment {
 
     public interface MyDialogFragmentListener {     //Interface to help send values back to set activity
-        void onReturnValue(int weight, int rep);
+        void onReturnValue(int weight, int rep, String mode, int PKey);
     }
 
     private LayoutInflater inflater; //store a ref to the activity's inflater
@@ -28,6 +28,7 @@ public class SetDialog extends DialogFragment {
     private NumberPicker mWeightPicker; //number spinner for weight selection
     private NumberPicker mRepPicker;    //number spinner for reps
 
+    private int PKey;                   //In update mode, store the primary key of the set that will be updated
     private int displayWeight;          //Initialize weight number on the number picker
     private int displayReps;            //Initialize weight number on the number picker
     private String mode;                //String displayed in the title
@@ -50,7 +51,7 @@ public class SetDialog extends DialogFragment {
                 //implement the interface for sending picker values back to the set activity
                 MyDialogFragmentListener activity = (MyDialogFragmentListener) getActivity();
                 //send values back to set activity
-                activity.onReturnValue(mWeightPicker.getValue(),mRepPicker.getValue());
+                activity.onReturnValue(mWeightPicker.getValue(),mRepPicker.getValue(),mode,PKey);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -84,4 +85,5 @@ public class SetDialog extends DialogFragment {
     public void setMode(String mode) {
         this.mode = mode;
     }
+    public void setThisKey(int PKey) {this.PKey = PKey;}
 }
